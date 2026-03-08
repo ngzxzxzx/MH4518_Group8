@@ -1,0 +1,82 @@
+======================================================================
+BARRIER REVERSE CONVERTIBLE - COMPREHENSIVE PRICING REPORT
+======================================================================
+
+Report Generated: 2026-03-08 23:22:37
+
+--------------------------------------------------
+PRODUCT SPECIFICATIONS
+--------------------------------------------------
+Underlying Assets: NFLX, SPOT, DIS
+Valuation Date: 2025-04-01
+Maturity Date: 2026-10-01
+Time to Maturity: 1.50 years
+Coupon Rate: 13.75% p.a.
+Barrier Level: 50% of Initial
+Principal Amount: $100
+
+--------------------------------------------------
+CALIBRATED MODEL PARAMETERS
+--------------------------------------------------
+
+Spot Prices:
+   NFLX: $93.25
+   SPOT: $550.03
+   DIS: $97.62
+
+Volatilities (annualized):
+   NFLX: 32.80%
+      Historical: 45.27%
+      Option-Implied: 24.49%
+   SPOT: 33.38%
+      Historical: 49.92%
+      Option-Implied: 22.36%
+   DIS: 25.42%
+      Historical: 33.54%
+      Option-Implied: 20.00%
+
+Correlation Matrix:
+          NFLX   SPOT    DIS
+   NFLX  1.000  0.357  0.352
+   SPOT  0.357  1.000  0.489
+   DIS   0.352  0.489  1.000
+
+--------------------------------------------------
+PRICING RESULTS
+--------------------------------------------------
+
+BRC Price: $101.6211
+Standard Error: ±$0.5686
+95% Confidence Interval: [$52.9970, $109.3249]
+
+Barrier Touch Probability: 16.00%
+
+Scenario Probabilities:
+   No Barrier Touch: 84.00%
+   Barrier Touch + Full Principal: 0.00%
+   Barrier Touch + Physical Delivery: 16.00%
+
+Expected Coupons: $17.1875
+Expected Principal Repayment: $84.4336
+
+Annualized Yield: 1.08%
+
+--------------------------------------------------
+SIMULATION DETAILS
+--------------------------------------------------
+Number of Simulations: 1,000
+Number of Time Steps: 378
+Time Step Size: 0.0040 years (~1.4 days)
+Number of Coupon Payments: 6
+
+--------------------------------------------------
+COUPON PAYMENT DATES
+--------------------------------------------------
+   Payment 1: 2025-07-01
+   Payment 2: 2025-10-01
+   Payment 3: 2026-01-01
+   Payment 4: 2026-04-01
+   Payment 5: 2026-07-01
+   Maturity: 2026-10-01
+
+======================================================================
