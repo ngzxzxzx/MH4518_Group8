@@ -1,0 +1,160 @@
+python fetch_historical_v1.py
+
+
+OUTPUT REFERENCE BELOW -->
+
+
+============================================================
+HISTORICAL DATA DOWNLOADER - STARTED
+============================================================
+Target Tickers: ['NFLX', 'SPOT', 'DIS']
+Output Directory: ../../final_dataset/prices/fetch_prices_v1
+
+============================================================
+DOWNLOADING HISTORICAL PRICE DATA
+============================================================
+Tickers: ['NFLX', 'SPOT', 'DIS']
+Period: 2020-01-01 to 2025-04-01
+Estimated data points: ~1370 trading days
+[*********************100%***********************]  3 of 3 completed
+
+Good: Data downloaded successfully
+   Shape: (1318, 3)
+   Date range: 2020-01-02 00:00:00 to 2025-03-31 00:00:00
+   Total trading days: 1318
+
+============================================================
+CALCULATING RETURN METRICS
+============================================================
+
+Return Statistics:
+   Mean Returns (ann): [-0.01931249  0.30498605  0.37117305]
+   Volatilities (ann): [0.33541314 0.45274611 0.49924338]
+   Max Drawdown: {'NFLX': np.float64(-0.7594731825161352), 'SPOT': np.float64(-0.8051235531270285), 'DIS': np.float64(-0.6071517332745253)}
+
+============================================================
+MARKET REGIME ANALYSIS
+============================================================
+
+PRE_COVID:
+   Volatility: [0.26097728 0.35933112 0.3774897 ]
+   Mean Return: [-1.45364444  0.789018   -0.57943508]
+
+COVID_CRASH:
+   Volatility: [0.86599994 0.69249674 0.64138293]
+   Mean Return: [-0.12647743  0.99381735  0.78743992]
+
+POST_COVID_RECOVERY:
+   Volatility: [0.313849   0.35957717 0.50219723]
+   Mean Return: [0.26283416 0.2794037  0.38482588]
+
+2022_BEAR_MARKET:
+   Volatility: [0.37064887 0.7006307  0.66066379]
+   Mean Return: [-0.51061489 -0.45014722 -0.8691612 ]
+
+2023_RECOVERY:
+   Volatility: [0.26487485 0.37511005 0.39085   ]
+   Mean Return: [0.07713168 0.57438507 0.95161609]
+
+2024_CONSOLIDATION:
+   Volatility: [0.25332693 0.31908793 0.39908014]
+   Mean Return: [0.11109459 0.57577918 0.94689703]
+
+============================================================
+CREATING VISUALIZATIONS
+============================================================
+Good: Visualizations saved to ../../final_dataset/prices/fetch_prices_v1/plots/
+
+============================================================
+SAVING PROCESSED DATA
+============================================================
+
+Good: All data saved to ../../final_dataset/prices/fetch_prices_v1/
+   - Raw data: ../../final_dataset/prices/fetch_prices_v1/raw/
+   - Processed data: ../../final_dataset/prices/fetch_prices_v1/processed/
+   - Analysis: ../../final_dataset/prices/fetch_prices_v1/analysis/
+   - Plots: ../../final_dataset/prices/fetch_prices_v1/plots/
+
+============================================================
+GENERATING MARKET DATA REPORT
+============================================================
+============================================================
+BARRIER REVERSE CONVERTIBLE - HISTORICAL DATA REPORT
+============================================================
+
+Report Generated: 2026-03-08 23:06:04
+Data Period: 2020-01-01 to 2025-04-01
+Trading Days: 1318
+
+----------------------------------------
+SUMMARY STATISTICS (Annualized)
+----------------------------------------
+
+NFLX:
+   Mean Return: 30.50%
+   Volatility: 45.27%
+   Max Drawdown: -75.95%
+   Skewness: -1.229
+   Kurtosis: 22.916
+   Normal Distribution: False (p=0.000)
+
+SPOT:
+   Mean Return: 37.12%
+   Volatility: 49.92%
+   Max Drawdown: -80.51%
+   Skewness: 0.081
+   Kurtosis: 3.195
+   Normal Distribution: False (p=0.000)
+
+DIS:
+   Mean Return: -1.93%
+   Volatility: 33.54%
+   Max Drawdown: -60.72%
+   Skewness: 0.307
+   Kurtosis: 8.395
+   Normal Distribution: False (p=0.000)
+
+----------------------------------------
+CORRELATION MATRIX
+----------------------------------------
+
+Ticker    DIS   NFLX   SPOT
+Ticker                     
+DIS     1.000  0.357  0.352
+NFLX    0.357  1.000  0.489
+SPOT    0.352  0.489  1.000
+
+----------------------------------------
+COVARIANCE MATRIX (Annualized)
+----------------------------------------
+
+Ticker     DIS    NFLX    SPOT
+Ticker                        
+DIS     0.1125  0.0542  0.0589
+NFLX    0.0542  0.2050  0.1106
+SPOT    0.0589  0.1106  0.2492
+
+Good: Report saved to ../../final_dataset/prices/fetch_prices_v1/analysis/data_report.txt
+
+============================================================
+DATA DOWNLOAD COMPLETE
+============================================================
+All data saved to: ../../final_dataset/prices/fetch_prices_v1/
+
+============================================================
+QUICK ACCESS - KEY DATASETS
+============================================================
+
+To load the data in your main script:
+
+# Load prices
+prices = pd.read_csv('./historical_data/processed/prices.csv', index_col=0)
+
+# Load returns
+returns = pd.read_csv('./historical_data/processed/simple_returns.csv', index_col=0)
+
+# Load statistics
+import pickle
+with open('./historical_data/processed/statistics.pkl', 'rb') as f:
+    stats = pickle.load(f)
+
