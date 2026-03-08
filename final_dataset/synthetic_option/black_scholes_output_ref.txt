@@ -1,0 +1,93 @@
+python blackScholes_synthetic.py
+
+
+OUTPUT REFERENCE BELOW -->
+
+
+============================================================
+GENERATING BLACK-SCHOLES SYNTHETIC OPTION DATA
+============================================================
+
+Generating option surface for NFLX...
+   Generated 63 options for NFLX
+
+Generating option surface for SPOT...
+   Generated 63 options for SPOT
+
+Generating option surface for DIS...
+   Generated 63 options for DIS
+
+============================================================
+PREPARING CALIBRATION DATASETS
+============================================================
+
+NFLX Calibration Data:
+   - Options: 63
+   - Maturities: 7
+   - ATM Vol Range: 0.35 - 0.42
+   - Skew (90-110): 0.060
+
+SPOT Calibration Data:
+   - Options: 63
+   - Maturities: 7
+   - ATM Vol Range: 0.30 - 0.36
+   - Skew (90-110): 0.050
+
+DIS Calibration Data:
+   - Options: 63
+   - Maturities: 7
+   - ATM Vol Range: 0.25 - 0.30
+   - Skew (90-110): 0.040
+
+============================================================
+GENERATION COMPLETE
+============================================================
+Total options generated: 189
+Files saved to: ../../final_dataset/synthetic_option/black_scholes/
+   - [TICKER]_bs_surface.csv (individual surfaces)
+   - all_bs_surfaces.csv (combined data)
+   - bs_surface_params.pkl (surface parameters)
+   - calibration_data.csv (for modelling)
+
+============================================================
+VALIDATING OPTION SURFACE
+============================================================
+   NFLX_T0.0833: {'monotonic': np.True_, 'convex': np.True_}
+   NFLX_T0.25: {'monotonic': np.True_, 'convex': np.False_}
+   NFLX_T0.5: {'monotonic': np.True_, 'convex': np.False_}
+   NFLX_T0.75: {'monotonic': np.True_, 'convex': np.False_}
+   NFLX_T1.0: {'monotonic': np.True_, 'convex': np.False_}
+   NFLX_T1.5: {'monotonic': np.True_, 'convex': np.False_}
+   NFLX_T2.0: {'monotonic': np.True_, 'convex': np.False_}
+   NFLX_put_call_parity: True
+   SPOT_T0.0833: {'monotonic': np.True_, 'convex': np.True_}
+   SPOT_T0.25: {'monotonic': np.True_, 'convex': np.False_}
+   SPOT_T0.5: {'monotonic': np.True_, 'convex': np.False_}
+   SPOT_T0.75: {'monotonic': np.True_, 'convex': np.False_}
+   SPOT_T1.0: {'monotonic': np.True_, 'convex': np.False_}
+   SPOT_T1.5: {'monotonic': np.True_, 'convex': np.False_}
+   SPOT_T2.0: {'monotonic': np.True_, 'convex': np.False_}
+   SPOT_put_call_parity: True
+   DIS_T0.0833: {'monotonic': np.True_, 'convex': np.True_}
+   DIS_T0.25: {'monotonic': np.True_, 'convex': np.True_}
+   DIS_T0.5: {'monotonic': np.True_, 'convex': np.False_}
+   DIS_T0.75: {'monotonic': np.True_, 'convex': np.False_}
+   DIS_T1.0: {'monotonic': np.True_, 'convex': np.False_}
+   DIS_T1.5: {'monotonic': np.True_, 'convex': np.False_}
+   DIS_T2.0: {'monotonic': np.True_, 'convex': np.False_}
+   DIS_put_call_parity: True
+
+============================================================
+SAMPLE OPTION DATA (ATM Options)
+============================================================
+   ticker  maturity_years  strike  call_price   put_price  implied_vol  delta_call
+4    NFLX          0.0833   850.0   35.964393   32.431506     0.350000    0.536547
+13   NFLX          0.2500   850.0   68.938882   58.380013     0.377543    0.563797
+22   NFLX          0.5000   850.0  103.929461   82.942886     0.394248    0.590591
+31   NFLX          0.7500   850.0  132.275963  100.991218     0.404381    0.611098
+40   NFLX          1.0000   850.0  156.579899  115.124910     0.410527    0.628188
+49   NFLX          1.5000   850.0  197.392968  135.974932     0.416515    0.656189
+58   NFLX          2.0000   850.0  231.533940  150.645745     0.418718    0.679017
+67   SPOT          0.0833   350.0   12.802286   11.347567     0.300000    0.536411
+76   SPOT          0.2500   350.0   24.539864   20.192094     0.321742    0.562826
+85   SPOT          0.5000   350.0   37.150655   28.509124     0.335606    0.588622

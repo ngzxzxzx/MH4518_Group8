@@ -1,0 +1,227 @@
+python heston_synthetic.py
+
+
+OUTPUT REFERENCE BELOW -->
+
+
+============================================================
+GENERATING HESTON SYNTHETIC OPTION DATA
+============================================================
+
+Generating Heston option surface for NFLX...
+   Processing maturity 0.25Y...
+   Processing maturity 0.50Y...
+   Processing maturity 1.00Y...
+   Processing maturity 1.50Y...
+   Processing maturity 2.00Y...
+   Generated 55 options for NFLX
+   Heston parameters: v0=0.040, kappa=2.0, theta=0.060, sigma=0.30, rho=-0.70
+
+Generating Heston option surface for SPOT...
+   Processing maturity 0.25Y...
+   Processing maturity 0.50Y...
+   Processing maturity 1.00Y...
+   Processing maturity 1.50Y...
+   Processing maturity 2.00Y...
+   Generated 55 options for SPOT
+   Heston parameters: v0=0.030, kappa=1.8, theta=0.050, sigma=0.25, rho=-0.60
+
+Generating Heston option surface for DIS...
+   Processing maturity 0.25Y...
+   Processing maturity 0.50Y...
+   Processing maturity 1.00Y...
+   Processing maturity 1.50Y...
+   Processing maturity 2.00Y...
+   Generated 55 options for DIS
+   Heston parameters: v0=0.020, kappa=1.5, theta=0.040, sigma=0.20, rho=-0.50
+
+============================================================
+PREPARING CALIBRATION DATASETS
+============================================================
+
+NFLX Calibration Data:
+   - Options: 55
+   - Maturities: 5
+   - ATM Vol Range: 0.22 - 0.24
+   - Avg Skew (90-110): 0.020
+   - Avg Convexity: 0.001
+
+SPOT Calibration Data:
+   - Options: 55
+   - Maturities: 5
+   - ATM Vol Range: 0.19 - 0.22
+   - Avg Skew (90-110): 0.015
+   - Avg Convexity: 0.001
+
+DIS Calibration Data:
+   - Options: 55
+   - Maturities: 5
+   - ATM Vol Range: 0.16 - 0.20
+   - Avg Skew (90-110): 0.011
+   - Avg Convexity: 0.001
+
+============================================================
+GENERATION COMPLETE
+============================================================
+Total options generated: 165
+Files saved to: ../../final_dataset/synthetic_option/heston/
+   - [TICKER]_heston_surface.csv (individual surfaces)
+   - all_heston_surfaces.csv (combined data)
+   - heston_parameters.pkl (model parameters)
+   - calibration_data.pkl (for modelling)
+
+============================================================
+VOLATILITY SMILE ANALYSIS
+============================================================
+
+NFLX Volatility Smile:
+
+   Maturity 0.2Y:
+      Moneyness 0.70: 0.281
+      Moneyness 0.80: 0.257
+      Moneyness 0.85: 0.246
+      Moneyness 0.90: 0.236
+      Moneyness 0.95: 0.227
+      Moneyness 1.00: 0.219
+      Moneyness 1.05: 0.211
+      Moneyness 1.10: 0.203
+      Moneyness 1.15: 0.196
+      Moneyness 1.20: 0.189
+      Moneyness 1.30: 0.177
+
+   Maturity 1.0Y:
+      Moneyness 0.70: 0.273
+      Moneyness 0.80: 0.260
+      Moneyness 0.85: 0.254
+      Moneyness 0.90: 0.249
+      Moneyness 0.95: 0.244
+      Moneyness 1.00: 0.239
+      Moneyness 1.05: 0.235
+      Moneyness 1.10: 0.231
+      Moneyness 1.15: 0.227
+      Moneyness 1.20: 0.223
+      Moneyness 1.30: 0.216
+
+   Maturity 2.0Y:
+      Moneyness 0.70: 0.264
+      Moneyness 0.80: 0.256
+      Moneyness 0.85: 0.253
+      Moneyness 0.90: 0.250
+      Moneyness 0.95: 0.247
+      Moneyness 1.00: 0.244
+      Moneyness 1.05: 0.242
+      Moneyness 1.10: 0.239
+      Moneyness 1.15: 0.237
+      Moneyness 1.20: 0.235
+      Moneyness 1.30: 0.231
+
+SPOT Volatility Smile:
+
+   Maturity 0.2Y:
+      Moneyness 0.70: 0.239
+      Moneyness 0.80: 0.221
+      Moneyness 0.85: 0.213
+      Moneyness 0.90: 0.206
+      Moneyness 0.95: 0.199
+      Moneyness 1.00: 0.193
+      Moneyness 1.05: 0.187
+      Moneyness 1.10: 0.182
+      Moneyness 1.15: 0.177
+      Moneyness 1.20: 0.172
+      Moneyness 1.30: 0.163
+
+   Maturity 1.0Y:
+      Moneyness 0.70: 0.242
+      Moneyness 0.80: 0.232
+      Moneyness 0.85: 0.228
+      Moneyness 0.90: 0.224
+      Moneyness 0.95: 0.220
+      Moneyness 1.00: 0.216
+      Moneyness 1.05: 0.213
+      Moneyness 1.10: 0.210
+      Moneyness 1.15: 0.207
+      Moneyness 1.20: 0.204
+      Moneyness 1.30: 0.199
+
+   Maturity 2.0Y:
+      Moneyness 0.70: 0.238
+      Moneyness 0.80: 0.232
+      Moneyness 0.85: 0.229
+      Moneyness 0.90: 0.227
+      Moneyness 0.95: 0.224
+      Moneyness 1.00: 0.222
+      Moneyness 1.05: 0.220
+      Moneyness 1.10: 0.219
+      Moneyness 1.15: 0.217
+      Moneyness 1.20: 0.215
+      Moneyness 1.30: 0.212
+
+DIS Volatility Smile:
+
+   Maturity 0.2Y:
+      Moneyness 0.70: 0.194
+      Moneyness 0.80: 0.181
+      Moneyness 0.85: 0.176
+      Moneyness 0.90: 0.171
+      Moneyness 0.95: 0.166
+      Moneyness 1.00: 0.162
+      Moneyness 1.05: 0.158
+      Moneyness 1.10: 0.154
+      Moneyness 1.15: 0.151
+      Moneyness 1.20: 0.150
+      Moneyness 1.30: 0.150
+
+   Maturity 1.0Y:
+      Moneyness 0.70: 0.208
+      Moneyness 0.80: 0.201
+      Moneyness 0.85: 0.197
+      Moneyness 0.90: 0.194
+      Moneyness 0.95: 0.191
+      Moneyness 1.00: 0.189
+      Moneyness 1.05: 0.186
+      Moneyness 1.10: 0.184
+      Moneyness 1.15: 0.181
+      Moneyness 1.20: 0.179
+      Moneyness 1.30: 0.176
+
+   Maturity 2.0Y:
+      Moneyness 0.70: 0.210
+      Moneyness 0.80: 0.205
+      Moneyness 0.85: 0.203
+      Moneyness 0.90: 0.201
+      Moneyness 0.95: 0.199
+      Moneyness 1.00: 0.197
+      Moneyness 1.05: 0.196
+      Moneyness 1.10: 0.195
+      Moneyness 1.15: 0.193
+      Moneyness 1.20: 0.192
+      Moneyness 1.30: 0.190
+
+============================================================
+VERIFYING NO-ARBITRAGE CONDITIONS
+============================================================
+!!! 9 Arbitrage violations found: !!!
+   - NFLX T=1.0: Prices not convex
+   - NFLX T=1.5: Prices not convex
+   - NFLX T=2.0: Prices not convex
+   - SPOT T=1.0: Prices not convex
+   - SPOT T=1.5: Prices not convex
+   - SPOT T=2.0: Prices not convex
+   - DIS T=1.0: Prices not convex
+   - DIS T=1.5: Prices not convex
+   - DIS T=2.0: Prices not convex
+
+============================================================
+SAMPLE OPTION DATA (ATM Options)
+============================================================
+    ticker  maturity_years  strike  call_price  implied_vol
+5     NFLX            0.25   850.0   42.366766     0.218791
+16    NFLX            0.50   850.0   65.411364     0.229439
+27    NFLX            1.00   850.0  101.435539     0.239360
+38    NFLX            1.50   850.0  130.627615     0.242908
+49    NFLX            2.00   850.0  155.999015     0.244200
+60    SPOT            0.25   350.0   15.671049     0.192996
+71    SPOT            0.50   350.0   24.552897     0.204618
+82    SPOT            1.00   350.0   38.693994     0.216088
+93    SPOT            1.50   350.0   50.272265     0.220581
+104   SPOT            2.00   350.0   60.373890     0.222381

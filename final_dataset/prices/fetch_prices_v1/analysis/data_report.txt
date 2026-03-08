@@ -1,0 +1,55 @@
+============================================================
+BARRIER REVERSE CONVERTIBLE - HISTORICAL DATA REPORT
+============================================================
+
+Report Generated: 2026-03-08 23:06:04
+Data Period: 2020-01-01 to 2025-04-01
+Trading Days: 1318
+
+----------------------------------------
+SUMMARY STATISTICS (Annualized)
+----------------------------------------
+
+NFLX:
+   Mean Return: 30.50%
+   Volatility: 45.27%
+   Max Drawdown: -75.95%
+   Skewness: -1.229
+   Kurtosis: 22.916
+   Normal Distribution: False (p=0.000)
+
+SPOT:
+   Mean Return: 37.12%
+   Volatility: 49.92%
+   Max Drawdown: -80.51%
+   Skewness: 0.081
+   Kurtosis: 3.195
+   Normal Distribution: False (p=0.000)
+
+DIS:
+   Mean Return: -1.93%
+   Volatility: 33.54%
+   Max Drawdown: -60.72%
+   Skewness: 0.307
+   Kurtosis: 8.395
+   Normal Distribution: False (p=0.000)
+
+----------------------------------------
+CORRELATION MATRIX
+----------------------------------------
+
+Ticker    DIS   NFLX   SPOT
+Ticker                     
+DIS     1.000  0.357  0.352
+NFLX    0.357  1.000  0.489
+SPOT    0.352  0.489  1.000
+
+----------------------------------------
+COVARIANCE MATRIX (Annualized)
+----------------------------------------
+
+Ticker     DIS    NFLX    SPOT
+Ticker                        
+DIS     0.1125  0.0542  0.0589
+NFLX    0.0542  0.2050  0.1106
+SPOT    0.0589  0.1106  0.2492
