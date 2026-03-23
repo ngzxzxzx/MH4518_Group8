@@ -1,5 +1,5 @@
 """
-Heston Model Synthetic Option Data Generator - SIMPLIFIED ROBUST VERSION
+Heston Model Synthetic Option Data Generator
 Generates realistic option surfaces using a combination of Heston principles
 and direct volatility surface parameterization
 """

@@ -334,6 +334,9 @@ class GBMBarrierReverseConvertible:
         
         return paths
     
+
+    ################################################################################
+    ## Discrete Version 1 ##
     def detect_barrier_touch(self, paths: np.ndarray) -> np.ndarray:
         """
         Detect if barrier was touched during the simulation
@@ -358,6 +361,62 @@ class GBMBarrierReverseConvertible:
         self.barrier_touch_times = touch_times
         
         return barrier_touched
+    
+    ################################################################################
+    ## Continuous Version 1 ##
+    def detect_barrier_touch_brownian_bridge(self, paths: np.ndarray) -> np.ndarray:
+        """
+        Detect barrier touch with Brownian Bridge correction for continuous monitoring
+        """
+        n_simulations = paths.shape[0]
+        n_steps = paths.shape[1]
+        
+        # Calculate barrier levels
+        barrier_levels = np.array([self.spot_prices[ticker] * self.barrier_level 
+                                for ticker in self.tickers])
+        
+        # Initialize barrier touch array
+        barrier_touched = np.zeros(n_simulations, dtype=bool)
+        
+        # Brownian Bridge correction
+        for sim in range(n_simulations):
+            for step in range(n_steps - 1):
+                for asset in range(self.n_assets):
+                    S_t = paths[sim, step, asset]
+                    S_next = paths[sim, step + 1, asset]
+                    B = barrier_levels[asset]
+                    sigma = self.volatilities[self.tickers[asset]]
+                    dt = self.dt
+                    
+                    # Only apply correction if both endpoints above barrier
+                    if S_t > B and S_next > B:
+                        # Brownian Bridge probability of crossing
+                        log_ratio_t = np.log(S_t / B)
+                        log_ratio_next = np.log(S_next / B)
+                        
+                        # Avoid division by zero
+                        if sigma**2 * dt > 1e-10:
+                            exponent = -2 * log_ratio_t * log_ratio_next / (sigma**2 * dt)
+                            
+                            # Probability of NOT crossing
+                            p_no_cross = np.exp(exponent)
+                            
+                            # Monte Carlo decision: did we cross?
+                            if np.random.random() > p_no_cross:
+                                barrier_touched[sim] = True
+                                break
+                    
+                    # Check discrete touch (standard method)
+                    elif S_t <= B or S_next <= B:
+                        barrier_touched[sim] = True
+                        break
+                
+                if barrier_touched[sim]:
+                    break
+        
+        return barrier_touched
+    ################################################################################
+
     
     def calculate_payoff(self, paths: np.ndarray, barrier_touched: np.ndarray) -> np.ndarray:
         """
