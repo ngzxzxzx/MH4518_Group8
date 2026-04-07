@@ -1,5 +1,5 @@
 """
-Complete Risk Management Module with Mathematical Derivations
+BRC Risk Assessment with Mathematical Derivations
 """
 import numpy as np
 from scipy.stats import norm
@@ -7,7 +7,7 @@ import pickle
 
 class BRCRiskManagerWithDerivations:
     """
-    Risk manager with full mathematical justification for all limits
+    Risk manager with mathematical justification for limits
     """
     
     def __init__(self):
