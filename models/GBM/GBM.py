@@ -147,7 +147,7 @@ class GBMBarrierReverseConvertible:
                 self.spot_prices[ticker] = prices[ticker].iloc[-1]
             
             # Extract historical volatilities
-            # From your output: 
+            # From output: 
             # NFLX: 45.27%, SPOT: 49.92%, DIS: 33.54%
             hist_vols = {
                 'NFLX': 0.4527,
@@ -156,7 +156,7 @@ class GBMBarrierReverseConvertible:
             }
             
             # Extract correlation matrix
-            # From your output correlation matrix
+            # From output correlation matrix
             self.correlation_matrix = np.array([
                 [1.000, 0.357, 0.352],
                 [0.357, 1.000, 0.489],
@@ -171,7 +171,7 @@ class GBMBarrierReverseConvertible:
             self.historical_vols = hist_vols
             
         except Exception as e:
-            print(f"⚠ Warning: Could not load historical data: {str(e)}")
+            print(f"!! Warning !!: Could not load historical data: {str(e)}")
             print("Using default values...")
             self._set_default_historical()
     
@@ -196,7 +196,7 @@ class GBMBarrierReverseConvertible:
                 # Extract implied vols (using long-term vol as base)
                 for ticker in self.tickers:
                     if ticker in heston_params:
-                        # From your Heston output:
+                        # From Heston output:
                         # NFLX: theta=0.06 -> vol=24.5%
                         # SPOT: theta=0.05 -> vol=22.4%
                         # DIS: theta=0.04 -> vol=20.0%
@@ -212,7 +212,7 @@ class GBMBarrierReverseConvertible:
                 
                 print("Good:  Loaded Black-Scholes parameters")
                 
-                # From your BS output:
+                # From BS output:
                 # NFLX base_vol=0.35, SPOT base_vol=0.30, DIS base_vol=0.25
                 for ticker in self.tickers:
                     if ticker in bs_params:
@@ -228,7 +228,7 @@ class GBMBarrierReverseConvertible:
                 print("Using Black-Scholes base vols as option-implied")
             
         except Exception as e:
-            print(f"⚠ Warning: Could not load option data: {str(e)}")
+            print(f"!! Warning !!: Could not load option data: {str(e)}")
             self.option_vols = {
                 'NFLX': 0.35,
                 'SPOT': 0.30,
