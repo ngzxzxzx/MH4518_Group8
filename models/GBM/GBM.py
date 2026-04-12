@@ -147,7 +147,7 @@ class GBMBarrierReverseConvertible:
                 self.spot_prices[ticker] = prices[ticker].iloc[-1]
             
             # Extract historical volatilities
-            # From your output: 
+            # From output: 
             # NFLX: 45.27%, SPOT: 49.92%, DIS: 33.54%
             hist_vols = {
                 'NFLX': 0.4527,
@@ -156,7 +156,7 @@ class GBMBarrierReverseConvertible:
             }
             
             # Extract correlation matrix
-            # From your output correlation matrix
+            # From output correlation matrix
             self.correlation_matrix = np.array([
                 [1.000, 0.357, 0.352],
                 [0.357, 1.000, 0.489],
@@ -171,7 +171,7 @@ class GBMBarrierReverseConvertible:
             self.historical_vols = hist_vols
             
         except Exception as e:
-            print(f"⚠ Warning: Could not load historical data: {str(e)}")
+            print(f"!! Warning !!: Could not load historical data: {str(e)}")
             print("Using default values...")
             self._set_default_historical()
     
@@ -196,7 +196,7 @@ class GBMBarrierReverseConvertible:
                 # Extract implied vols (using long-term vol as base)
                 for ticker in self.tickers:
                     if ticker in heston_params:
-                        # From your Heston output:
+                        # From Heston output:
                         # NFLX: theta=0.06 -> vol=24.5%
                         # SPOT: theta=0.05 -> vol=22.4%
                         # DIS: theta=0.04 -> vol=20.0%
@@ -212,7 +212,7 @@ class GBMBarrierReverseConvertible:
                 
                 print("Good:  Loaded Black-Scholes parameters")
                 
-                # From your BS output:
+                # From BS output:
                 # NFLX base_vol=0.35, SPOT base_vol=0.30, DIS base_vol=0.25
                 for ticker in self.tickers:
                     if ticker in bs_params:
@@ -228,7 +228,7 @@ class GBMBarrierReverseConvertible:
                 print("Using Black-Scholes base vols as option-implied")
             
         except Exception as e:
-            print(f"⚠ Warning: Could not load option data: {str(e)}")
+            print(f"!! Warning !!: Could not load option data: {str(e)}")
             self.option_vols = {
                 'NFLX': 0.35,
                 'SPOT': 0.30,
@@ -334,6 +334,9 @@ class GBMBarrierReverseConvertible:
         
         return paths
     
+
+    ################################################################################
+    ## Discrete Version 1 ##
     def detect_barrier_touch(self, paths: np.ndarray) -> np.ndarray:
         """
         Detect if barrier was touched during the simulation
@@ -358,6 +361,62 @@ class GBMBarrierReverseConvertible:
         self.barrier_touch_times = touch_times
         
         return barrier_touched
+    
+    ################################################################################
+    ## Continuous Version 1 ##
+    def detect_barrier_touch_brownian_bridge(self, paths: np.ndarray) -> np.ndarray:
+        """
+        Detect barrier touch with Brownian Bridge correction for continuous monitoring
+        """
+        n_simulations = paths.shape[0]
+        n_steps = paths.shape[1]
+        
+        # Calculate barrier levels
+        barrier_levels = np.array([self.spot_prices[ticker] * self.barrier_level 
+                                for ticker in self.tickers])
+        
+        # Initialize barrier touch array
+        barrier_touched = np.zeros(n_simulations, dtype=bool)
+        
+        # Brownian Bridge correction
+        for sim in range(n_simulations):
+            for step in range(n_steps - 1):
+                for asset in range(self.n_assets):
+                    S_t = paths[sim, step, asset]
+                    S_next = paths[sim, step + 1, asset]
+                    B = barrier_levels[asset]
+                    sigma = self.volatilities[self.tickers[asset]]
+                    dt = self.dt
+                    
+                    # Only apply correction if both endpoints above barrier
+                    if S_t > B and S_next > B:
+                        # Brownian Bridge probability of crossing
+                        log_ratio_t = np.log(S_t / B)
+                        log_ratio_next = np.log(S_next / B)
+                        
+                        # Avoid division by zero
+                        if sigma**2 * dt > 1e-10:
+                            exponent = -2 * log_ratio_t * log_ratio_next / (sigma**2 * dt)
+                            
+                            # Probability of NOT crossing
+                            p_no_cross = np.exp(exponent)
+                            
+                            # Monte Carlo decision: did we cross?
+                            if np.random.random() > p_no_cross:
+                                barrier_touched[sim] = True
+                                break
+                    
+                    # Check discrete touch (standard method)
+                    elif S_t <= B or S_next <= B:
+                        barrier_touched[sim] = True
+                        break
+                
+                if barrier_touched[sim]:
+                    break
+        
+        return barrier_touched
+    ################################################################################
+
     
     def calculate_payoff(self, paths: np.ndarray, barrier_touched: np.ndarray) -> np.ndarray:
         """

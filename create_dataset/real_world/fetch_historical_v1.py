@@ -82,7 +82,7 @@ class HistoricalDataDownloader:
             # Check for missing data
             missing_data = main_prices.isnull().sum()
             if missing_data.sum() > 0:
-                print(f"\n⚠ Warning: Missing data detected:")
+                print(f"\n!! Warning !!: Missing data detected:")
                 for ticker in self.tickers:
                     if missing_data[ticker] > 0:
                         print(f"   {ticker}: {missing_data[ticker]} missing days")
@@ -103,7 +103,7 @@ class HistoricalDataDownloader:
             return main_prices
             
         except Exception as e:
-            print(f"\n✗ Error downloading data: {str(e)}")
+            print(f"\nERROR: Error downloading data: {str(e)}")
             return None
     
     def calculate_returns(self, prices):
@@ -493,7 +493,7 @@ class HistoricalDataDownloader:
         # Step 1: Download data
         prices = self.download_data()
         if prices is None:
-            print("✗ Data download failed. Exiting.")
+            print("ERROR: Data download failed. Exiting.")
             return None
         
         # Step 2: Calculate returns and statistics
@@ -548,7 +548,7 @@ def main():
         print("\n" + "="*60)
         print("QUICK ACCESS - KEY DATASETS")
         print("="*60)
-        print("\nTo load the data in your main script:")
+        print("\nTo load the data in main script:")
         print("\n# Load prices")
         print("prices = pd.read_csv('./historical_data/processed/prices.csv', index_col=0)")
         print("\n# Load returns")
@@ -558,7 +558,7 @@ def main():
         print("with open('./historical_data/processed/statistics.pkl', 'rb') as f:")
         print("    stats = pickle.load(f)")
     else:
-        print("\n✗ Data download failed. Check your internet connection and ticker symbols.")
+        print("\nERROR: Data download failed. Check internet connection and ticker symbols.")
 
 if __name__ == "__main__":
     main()

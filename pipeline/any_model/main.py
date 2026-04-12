@@ -28,6 +28,7 @@ Usage
 
 import argparse
 import importlib
+import inspect
 import os
 import sys
 import time
@@ -164,6 +165,7 @@ def main(model_name:          str  = "heston",
         if use_live_data:
             try:
                 ds.realised_spots        = fetch_realised_prices()
+                print(f"\n  Realised spot prices length: {len(ds.realised_spots)}")
                 ds.initial_fixing_prices = INITIAL_FIXING_PRICES
                 ds.rolling_vol           = compute_rolling_vol(ds.realised_spots)
             except Exception as e:
@@ -179,8 +181,32 @@ def main(model_name:          str  = "heston",
             ds.live_surface          = surf_df.copy()
 
         print(f"\n  Calibrating {SimClass.model_name()} on explicit surface ...")
-        ds.model_params          = SimClass.calibrate(surf_df, TICKERS)
-        ds.terminal_model_params = SimClass.calibrate(ds.live_surface, TICKERS)
+
+        calibrate_sig = inspect.signature(SimClass.calibrate)
+        supports_inception_gibbs = (
+            "historical_price_df" in calibrate_sig.parameters
+            and "is_inception" in calibrate_sig.parameters
+            and not ds.realised_spots.empty
+        )
+
+        if supports_inception_gibbs:
+            ds.model_params = SimClass.calibrate(
+                surf_df,
+                TICKERS,
+                historical_price_df=ds.realised_spots,
+                is_inception=True,
+            )
+        else:
+            ds.model_params = SimClass.calibrate(surf_df, TICKERS)
+        if model_name == "heston_cefk" and not ds.realised_spots.empty:
+            ds.terminal_model_params = SimClass.calibrate(
+                ds.live_surface,
+                TICKERS,
+                historical_price_df=ds.realised_spots,
+                is_inception=False,
+            )
+        else:
+            ds.terminal_model_params = SimClass.calibrate(ds.live_surface, TICKERS)
 
         import os as _os
         hist_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
@@ -195,6 +221,35 @@ def main(model_name:          str  = "heston",
             data_root       = data_root,
             use_live_data   = use_live_data,
         )
+
+    # Ensure daily backtest params are available in both data-loading paths.
+    if not getattr(ds, "daily_params", None):
+        if not ds.realised_spots.empty:
+            try:
+                daily_cal_sig = inspect.signature(SimClass.calibrate_daily_for_backtest)
+                if "inception_params" in daily_cal_sig.parameters:
+                    # For heston_cefk, run fully historical daily calibration
+                    # (no inception structural freeze).
+                    if model_name == "heston_cefk":
+                        ds.daily_params = SimClass.calibrate_daily_for_backtest(
+                            ds.realised_spots, TICKERS,
+                            inception_params=None)
+                    else:
+                        ds.daily_params = SimClass.calibrate_daily_for_backtest(
+                            ds.realised_spots, TICKERS,
+                            inception_params=ds.model_params)
+                else:
+                    ds.daily_params = SimClass.calibrate_daily_for_backtest(
+                        ds.realised_spots, TICKERS)
+            except NotImplementedError:
+                print(f"  {SimClass.model_name()} does not support daily calibration — using v0-only updates")
+                ds.daily_params = {}
+            except Exception as e:
+                print(f"  WARNING: Daily calibration failed ({e}) — using v0-only updates")
+                ds.daily_params = {}
+        else:
+            ds.daily_params = {}
+            print("  WARNING: realised spots unavailable — using v0-only updates")
 
     # ── Initial fixing prices ────────────────────────────────────────────
     if ds.initial_fixing_prices:
