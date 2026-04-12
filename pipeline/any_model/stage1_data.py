@@ -41,6 +41,7 @@ Outputs  (DataStore)
 """
 
 import os
+import inspect
 import numpy as np
 import pandas as pd
 from scipy.optimize import brentq
@@ -105,6 +106,7 @@ class DataStore:
     live_surface:             pd.DataFrame = field(default_factory=pd.DataFrame)
     rolling_vol:              pd.DataFrame = field(default_factory=pd.DataFrame)
     model_params:             Dict         = field(default_factory=dict)   # generic
+    daily_params:             Dict         = field(default_factory=dict)   # generic
     terminal_model_params:    Dict         = field(default_factory=dict)   # generic
     initial_fixing_prices:    Dict         = field(default_factory=dict)
     surface_type:             str          = "bs"
@@ -250,8 +252,12 @@ def load_treasury_curve(path: str) -> pd.DataFrame:
     if date_col is None:
         date_col = raw.columns[0]
 
-    raw[date_col] = pd.to_datetime(raw[date_col], infer_datetime_format=True,
-                                   errors="coerce")
+    try:
+        raw[date_col] = pd.to_datetime(raw[date_col], infer_datetime_format=True,
+                                    errors="coerce")
+    except TypeError:
+        raw[date_col] = pd.to_datetime(raw[date_col], errors="coerce")
+
     raw = raw.dropna(subset=[date_col])
     df  = raw.set_index(date_col).copy()
     df.index = pd.DatetimeIndex(df.index).normalize()
@@ -421,9 +427,13 @@ def fetch_realised_prices(tickers: list = TICKERS,
                            start:   str  = INCEPTION_DATE) -> pd.DataFrame:
     if not YFINANCE_AVAILABLE:
         raise RuntimeError("yfinance required for realised prices")
+
+    inception_ts = pd.Timestamp(start)
+    lookback_start = (inception_ts - pd.Timedelta(days=365)).strftime("%Y-%m-%d") #require 1 year lookback for daily calibration
+
     today = date.today().isoformat()
-    print(f"  Fetching realised prices {start} to {today} ...")
-    raw = yf.download(tickers, start=start, end=today,
+    print(f"  Fetching realised prices {lookback_start} to {today} ...")
+    raw = yf.download(tickers, start=lookback_start, end=today,
                       auto_adjust=True, progress=False)["Close"]
     raw = raw[tickers].dropna()
     print(f"  Realised prices: {len(raw)} trading days")
@@ -839,11 +849,34 @@ def build_data_store(simulator_class,
     use_cf = "historical" in ds.surface_type
 
     print(f"\n[{model_name} calibration — inception surface ({ds.surface_type})]")
-    ds.model_params = simulator_class.calibrate(ds.inception_surface, TICKERS)
+    calibrate_sig = inspect.signature(simulator_class.calibrate)
+    supports_inception_gibbs = (
+        "historical_price_df" in calibrate_sig.parameters
+        and "is_inception" in calibrate_sig.parameters
+        and not ds.realised_spots.empty
+    )
+
+    if supports_inception_gibbs:
+        ds.model_params = simulator_class.calibrate(
+            ds.inception_surface,
+            TICKERS,
+            historical_price_df=ds.realised_spots,
+            is_inception=True,
+        )
+    else:
+        ds.model_params = simulator_class.calibrate(ds.inception_surface, TICKERS)
 
     print(f"\n[{model_name} calibration — terminal (yfinance live chain)]")
     if not ds.live_surface.empty:
-        ds.terminal_model_params = simulator_class.calibrate(ds.live_surface, TICKERS)
+        if supports_inception_gibbs:
+            ds.terminal_model_params = simulator_class.calibrate(
+                ds.live_surface,
+                TICKERS,
+                historical_price_df=ds.realised_spots,
+                is_inception=False,
+            )
+        else:
+            ds.terminal_model_params = simulator_class.calibrate(ds.live_surface, TICKERS)
     else:
         ds.terminal_model_params = {t: dict(**ds.model_params[t]) for t in TICKERS}
         print("  Terminal params set equal to inception params.")

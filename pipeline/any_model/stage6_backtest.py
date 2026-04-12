@@ -249,16 +249,50 @@ class BRCBacktester:
             # (e.g. HestonSimulator.update_params_for_vol or GBMSimulator…)
             # Each ticker falls back to the inception ATM vol if not in `vols`.
             inception_params = self.ds.model_params
-            model_params = {
-                t: self._update_params(
-                    inception_params[t],
-                    vols.get(t, float(np.sqrt(
-                        inception_params[t].get("v0",
-                            inception_params[t].get("sigma", 0.30)**2)
-                    )))
-                )
-                for t in self.tickers
-            }
+            model_params = {}
+            fallback_used = False
+
+            for t in self.tickers:
+                daily_df = self.ds.daily_params.get(t)
+                # Use the most recent calibration available on/before this date.
+                # Exact-date matching is brittle and can cause jumpy fallback behavior.
+                row = None
+                if (daily_df is not None and not daily_df.empty and 'date' in daily_df.columns):
+                    cal_dates = pd.to_datetime(daily_df['date'], errors='coerce')
+                    valid = cal_dates <= date
+                    if valid.any():
+                        row = daily_df.loc[valid].iloc[-1]
+
+                if row is not None:
+                    # Use full daily historical calibration when available.
+                    daily_params = {}
+                    for key in ["mu", "kappa", "theta", "sigma", "rho", "v0"]:
+                        if key in row.index and pd.notna(row[key]):
+                            daily_params[key] = float(row[key])
+
+                    if daily_params:
+                        model_params[t] = daily_params
+                    else:
+                        inception_param = inception_params[t]
+                        vol = vols.get(t, float(np.sqrt(
+                                    inception_param.get("v0", inception_param.get("sigma", 0.30) ** 2)
+                            )))
+                        model_params[t] = self._update_params(inception_param, vol)
+                        fallback_used = True
+
+                else:
+                    # Fallback to original 
+                    inception_param = inception_params[t]
+
+                    vol = vols.get(t, float(np.sqrt(
+                                inception_param.get("v0", inception_param.get("sigma", 0.30) ** 2)
+                        )))
+                    model_params[t] = self._update_params(inception_param, vol)
+                    fallback_used = True
+
+                # mu is always the risk-free rate (risk-neutral pricing).
+                model_params[t]['mu'] = self.r
+
 
             already_breached = self._barrier_breached_before(date)
 
@@ -279,7 +313,8 @@ class BRCBacktester:
             r_used = rate_curve_fn(T_rem) if rate_curve_fn else self.r
             print(f"  {date.date()}  price={price:7.4f}  se={stderr:.4f}  "
                   f"r={r_used:.3%}  "
-                  f"breached={'YES' if already_breached else 'no '}")
+                f"breached={'YES' if already_breached else 'no '}  "
+                f"fallback_used={'YES' if fallback_used else 'NO'}")
 
             price_records.append(dict(date=date, price=price,
                                       std_error=stderr,
