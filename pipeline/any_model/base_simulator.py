@@ -324,6 +324,7 @@ class BaseSimulator(ABC):
     @abstractmethod
     def calibrate(cls,
                   surface_df: "pd.DataFrame",
+                  historical_price_df: "pd.DataFrame",
                   tickers:    list,
                   r:          float = 0.05) -> Dict[str, dict]:
         """
@@ -333,6 +334,8 @@ class BaseSimulator(ABC):
         ----------
         surface_df : DataFrame with columns:
                      ticker, maturity_years, moneyness, vol (or implied_vol)
+        historical_price_df : DataFrame with columns:
+                        ticker, date, close
         tickers    : list of ticker symbols to calibrate
         r          : risk-free rate (decimal)
 
