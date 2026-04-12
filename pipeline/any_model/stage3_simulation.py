@@ -151,11 +151,6 @@ def variance_reduction_comparison(simulator,
                 price, stderr = _weighted_price_and_stderr(payoffs, weights)
                 ess = _effective_sample_size(weights) * n
             elif method == "antithetic":
-                # Pair positive and negative paths before computing std error.
-                # simulate() returns [pos_paths | neg_paths] concatenated; the
-                # antithetic estimator averages each pair so Cov(h+, h-) < 0
-                # reduces variance.  Treating all paths as independent (as crude
-                # MC does) ignores that negative correlation and gives no benefit.
                 half = len(payoffs) // 2
                 h_avg = (payoffs[:half] + payoffs[half:]) / 2.0
                 price  = float(h_avg.mean())
