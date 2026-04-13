@@ -6,64 +6,49 @@ BACKTEST PRICE SERIES
 ----------------------------------------
   Date grid       : aligned to historical UBS prices where available
   N pricing dates : 217
-  Inception price : 95.9561
-  Latest price    : 98.5347
-  Min price       : 87.9661  (2026-02-12)
-  Max price       : 106.4266  (2025-06-27)
+  Inception price : 97.3320
+  Last price in backtest    : 101.0440
+  Min price       : 88.1676  (2026-02-04)
+  Max price       : 111.4579  (2025-06-27)
 
   MODEL (w/o antithetic) vs UBS MARKET PRICE  (errors in % of $100 nominal)
   Window                 N     MAE    RMSE    Bias   MaxErr
   -------------------------------------------------------
-  Full period          217    1.69    2.18  + 0.88     8.01
-  Last 6 months        115    1.45    1.84  + 0.30     4.97
-  Last 3 months         54    1.84    2.11  -0.34     4.97
+  Full period          217    4.05    4.83  + 3.41    10.59
+  Last 6 months        115    3.15    3.73  + 2.07     7.23
+  Last 3 months         54    3.22    3.52  + 0.92     5.47
 
   MODEL (with antithetic) vs UBS MARKET PRICE  (errors in % of $100 nominal)
   Window                 N     MAE    RMSE    Bias   MaxErr
   -------------------------------------------------------
-  Full period          217    1.63    2.10  + 0.71     7.22
-  Last 6 months        115    1.41    1.81  + 0.17     5.18
-  Last 3 months         54    1.77    2.08  -0.48     5.18
+  Full period          217    4.08    4.86  + 3.41    10.64
+  Last 6 months        115    3.17    3.73  + 2.03     7.17
+  Last 3 months         54    3.23    3.52  + 0.81     5.62
   -------------------------------------------------------
   Bias > 0 means model is pricing above the UBS market price.
   Expected if inception vol surface is too low (underpriced short put).
 
 
-HESTON NMLE-CEKF PARAMETER COMPARISON (inception vs terminal)
+CEV PARAMETER COMPARISON (inception vs terminal)
 ----------------------------------------
   Inception = calibrated to synthetic surface at Apr 2 2025 (stylised inputs).
   Terminal  = calibrated to live option chain today (real market data).
-  v0  = instantaneous variance; sqrt(v0) = instantaneous vol.
-  kappa = mean-reversion speed.
-  theta = long-run variance.
-  sigma = vol-of-vol (Heston) or annualised vol (GBM).
-  rho = spot-vol correlation (should be negative for equities).
-  If terminal kappa/sigma are at their bounds, the live chain is too
-  sparse for reliable skew/smile identification — use v0 and theta only.
+  sigma = annualised vol (GBM) or vol/S^(1-beta) (CEV) or vol-of-vol (Heston).
 
   NFLX:
-    v0      : inception=0.1021  terminal=0.1021  change=+0.0000
-    kappa   : inception=2.0000  terminal=2.0000  change=+0.0000
-    theta   : inception=0.1114  terminal=0.1114  change=+0.0000
-    sigma   : inception=0.3000  terminal=0.3000  change=+0.0000
-    rho     : inception=-0.6000  terminal=-0.6000  change=+0.0000
-    mu      : inception=0.0500  terminal=0.0500  change=+0.0000
+    sigma   : inception=4.7820  terminal=3.8785  change=-0.9035
+    atm_vol_inception: inception=0.4963  terminal=N/A
+    beta    : inception=0.5000  terminal=0.5000  change=+0.0000
 
   SPOT:
-    v0      : inception=0.2175  terminal=0.2175  change=+0.0000
-    kappa   : inception=3.2607  terminal=3.2607  change=+0.0000
-    theta   : inception=0.1908  terminal=0.1908  change=+0.0000
-    sigma   : inception=0.2045  terminal=0.2045  change=+0.0000
-    rho     : inception=-0.9500  terminal=-0.9500  change=+0.0000
-    mu      : inception=0.0500  terminal=0.0500  change=+0.0000
+    sigma   : inception=6.4313  terminal=11.5715  change=+5.1402 ← AT BOUND
+    atm_vol_inception: inception=0.3438  terminal=N/A
+    beta    : inception=0.5000  terminal=0.5000  change=+0.0000
 
   DIS:
-    v0      : inception=0.0933  terminal=0.0933  change=+0.0000
-    kappa   : inception=2.0000  terminal=2.0000  change=+0.0000
-    theta   : inception=0.0836  terminal=0.0836  change=+0.0000
-    sigma   : inception=0.3000  terminal=0.3000  change=+0.0000
-    rho     : inception=-0.6000  terminal=-0.6000  change=+0.0000
-    mu      : inception=0.0500  terminal=0.0500  change=+0.0000
+    sigma   : inception=2.7094  terminal=3.2273  change=+0.5179
+    atm_vol_inception: inception=0.2757  terminal=N/A
+    beta    : inception=0.5000  terminal=0.5000  change=+0.0000
 
 BARRIER PROXIMITY  (ratio = spot / barrier_level$)
 ----------------------------------------
