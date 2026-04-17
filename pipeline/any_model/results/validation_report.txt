@@ -6,24 +6,24 @@ BACKTEST PRICE SERIES
 ----------------------------------------
   Date grid       : aligned to historical UBS prices where available
   N pricing dates : 217
-  Inception price : 97.3320
-  Last price in backtest    : 101.0440
-  Min price       : 88.1676  (2026-02-04)
-  Max price       : 111.4579  (2025-06-27)
+  Inception price : 89.2706
+  Last price in backtest    : 103.6731
+  Min price       : 84.0872  (2025-04-04)
+  Max price       : 111.8986  (2025-06-27)
 
   MODEL (w/o antithetic) vs UBS MARKET PRICE  (errors in % of $100 nominal)
   Window                 N     MAE    RMSE    Bias   MaxErr
   -------------------------------------------------------
-  Full period          217    4.05    4.83  + 3.41    10.59
-  Last 6 months        115    3.15    3.73  + 2.07     7.23
-  Last 3 months         54    3.22    3.52  + 0.92     5.47
+  Full period          217    4.67    5.59  + 4.00    11.28
+  Last 6 months        115    3.62    4.56  + 3.22     8.27
+  Last 3 months         54    4.12    4.93  + 3.47     8.27
 
   MODEL (with antithetic) vs UBS MARKET PRICE  (errors in % of $100 nominal)
   Window                 N     MAE    RMSE    Bias   MaxErr
   -------------------------------------------------------
-  Full period          217    4.08    4.86  + 3.41    10.64
-  Last 6 months        115    3.17    3.73  + 2.03     7.17
-  Last 3 months         54    3.23    3.52  + 0.81     5.62
+  Full period          217    4.72    5.64  + 4.02    11.32
+  Last 6 months        115    3.61    4.54  + 3.22     8.16
+  Last 3 months         54    4.09    4.88  + 3.41     8.16
   -------------------------------------------------------
   Bias > 0 means model is pricing above the UBS market price.
   Expected if inception vol surface is too low (underpriced short put).
@@ -36,17 +36,17 @@ CEV PARAMETER COMPARISON (inception vs terminal)
   sigma = annualised vol (GBM) or vol/S^(1-beta) (CEV) or vol-of-vol (Heston).
 
   NFLX:
-    sigma   : inception=4.7820  terminal=3.8785  change=-0.9035
+    sigma   : inception=4.7820  terminal=3.9365  change=-0.8455
     atm_vol_inception: inception=0.4963  terminal=N/A
     beta    : inception=0.5000  terminal=0.5000  change=+0.0000
 
   SPOT:
-    sigma   : inception=6.4313  terminal=11.5715  change=+5.1402 ← AT BOUND
+    sigma   : inception=6.4313  terminal=12.5551  change=+6.1238 ← AT BOUND
     atm_vol_inception: inception=0.3438  terminal=N/A
     beta    : inception=0.5000  terminal=0.5000  change=+0.0000
 
   DIS:
-    sigma   : inception=2.7094  terminal=3.2273  change=+0.5179
+    sigma   : inception=2.7094  terminal=3.0866  change=+0.3772
     atm_vol_inception: inception=0.2757  terminal=N/A
     beta    : inception=0.5000  terminal=0.5000  change=+0.0000
 
