@@ -2,78 +2,53 @@
 BRC MODEL — VALIDATION REPORT
 ======================================================================
 
-NOTES ON INTERPRETATION
-----------------------------------------
-  GBM fit RMSE : root-mean-squared error in IMPLIED VOLATILITY units
-                     (decimal, e.g. 0.05 = 5pp IV error per point).
-                     Inception RMSE ~0.01 is expected: the surface was
-                     *generated* by the same approximate formula.
-                     Terminal RMSE 0.05-0.15 is realistic for sparse live chains.
-                     RMSE > 0.15 suggests sparse/illiquid live option data.
-  Barrier proximity: ratio = spot(t) / barrier_price = spot(t) / (fixing × 0.50).
-                     > 1.0 → safe;  = 1.0 → barrier touched;  < 1.0 → breached.
-  Look-ahead note   : Terminal GBM params (from today's live chain) are used
-                     ONLY for the single endpoint validation anchor, not in the
-                     backtest loop. Backtest uses inception params + rolling vol.
-  Model-market gap  : Model uses synthetic inception vol surface (stylised).
-                     A gap vs UBS market price is expected; it narrows when
-                     calibrated to real April 2 2025 option chain data.
-
-CONSISTENCY CHECKS
-----------------------------------------
-  [PASS] price_in_range
-         All prices in [50.0, 120.0]: 81.47 – 111.68
-  [PASS] price_rises_away_from_barrier
-         Correlation(price, min_proximity) = 0.769
-  [PASS] attribution_residual
-         Mean unexplained residual = 0.0000
-  [FAIL] endpoint_anchor
-         Backtest endpoint=87.6890, live-chain price=97.2823, gap=9.5934
-  [FAIL] market_tracking
-         Model vs UBS market (217 dates) — MAE=4.67  RMSE(full)=5.50  RMSE(6m,n=115)=5.64  RMSE(3m,n=54)=5.92  MaxErr=11.68  (pass if MAE<$3)
-  [FAIL] barrier_proximity_directional
-         When worst-of asset moves toward barrier (>2% drop): 16/55 dates price moved UP (violation rate 29.1%, pass if <20%).  Problem dates: ['2025-04-08', '2025-05-23', '2025-06-17', '2025-07-08', '2025-07-09']
-  [PASS] vol_spike_directional
-         When max realised vol spikes >2% abs: 2/11 dates price moved UP (violation rate 18.2%, pass if <25%).  Problem dates: ['2025-08-04', '2026-02-26']
-  [FAIL] theta_positive_directional
-         On dates far from barrier with small spot moves (n=148): 31 dates price dropped >$0.10 without a meaningful spot move (violation rate 20.9%, pass if <20%).  Problem dates: ['2025-04-11', '2025-05-05', '2025-05-15', '2025-06-05', '2025-07-01']
-
-  Summary: 4/8 checks passed
-
 BACKTEST PRICE SERIES
 ----------------------------------------
   Date grid       : aligned to historical UBS prices where available
   N pricing dates : 217
-  Inception price : 92.1521
-  Latest price    : 87.6890
-  Min price       : 81.4731  (2026-02-12)
-  Max price       : 111.6762  (2025-06-25)
+  Inception price : 89.2706
+  Last price in backtest    : 103.6731
+  Min price       : 84.0872  (2025-04-04)
+  Max price       : 111.8986  (2025-06-27)
 
-  MODEL vs UBS MARKET PRICE  (errors in % of $100 nominal)
+  MODEL (w/o antithetic) vs UBS MARKET PRICE  (errors in % of $100 nominal)
   Window                 N     MAE    RMSE    Bias   MaxErr
   -------------------------------------------------------
-  Full period          217    4.67    5.50  + 2.70    11.68
-  Last 6 months        115    5.13    5.64  + 2.49    11.68
-  Last 3 months         54    5.20    5.92  -0.41    11.68
+  Full period          217    4.67    5.59  + 4.00    11.28
+  Last 6 months        115    3.62    4.56  + 3.22     8.27
+  Last 3 months         54    4.12    4.93  + 3.47     8.27
+
+  MODEL (with antithetic) vs UBS MARKET PRICE  (errors in % of $100 nominal)
+  Window                 N     MAE    RMSE    Bias   MaxErr
+  -------------------------------------------------------
+  Full period          217    4.72    5.64  + 4.02    11.32
+  Last 6 months        115    3.61    4.54  + 3.22     8.16
+  Last 3 months         54    4.09    4.88  + 3.41     8.16
   -------------------------------------------------------
   Bias > 0 means model is pricing above the UBS market price.
   Expected if inception vol surface is too low (underpriced short put).
 
 
-GBM PARAMETER COMPARISON (inception vs terminal)
+CEV PARAMETER COMPARISON (inception vs terminal)
 ----------------------------------------
   Inception = calibrated to synthetic surface at Apr 2 2025 (stylised inputs).
   Terminal  = calibrated to live option chain today (real market data).
-  sigma = vol-of-vol (Heston) or annualised vol (GBM).
+  sigma = annualised vol (GBM) or vol/S^(1-beta) (CEV) or vol-of-vol (Heston).
 
   NFLX:
-    sigma   : inception=0.4900  terminal=0.3955  change=-0.0945
+    sigma   : inception=4.7820  terminal=3.9365  change=-0.8455
+    atm_vol_inception: inception=0.4963  terminal=N/A
+    beta    : inception=0.5000  terminal=0.5000  change=+0.0000
 
   SPOT:
-    sigma   : inception=0.3386  terminal=0.5099  change=+0.1713
+    sigma   : inception=6.4313  terminal=12.5551  change=+6.1238 ← AT BOUND
+    atm_vol_inception: inception=0.3438  terminal=N/A
+    beta    : inception=0.5000  terminal=0.5000  change=+0.0000
 
   DIS:
-    sigma   : inception=0.2859  terminal=0.3217  change=+0.0358
+    sigma   : inception=2.7094  terminal=3.0866  change=+0.3772
+    atm_vol_inception: inception=0.2757  terminal=N/A
+    beta    : inception=0.5000  terminal=0.5000  change=+0.0000
 
 BARRIER PROXIMITY  (ratio = spot / barrier_level$)
 ----------------------------------------
