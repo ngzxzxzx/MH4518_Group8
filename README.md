@@ -35,7 +35,7 @@ Models Python Reference:
 - MH4518_Group8/models
 
 Repective Research Papers:
-- MH4518_Group8/papers
+- MH4518_Group8/research_papers
 
 
 ### 3. Jupyter Files
