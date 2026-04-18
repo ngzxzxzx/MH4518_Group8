@@ -30,4 +30,34 @@ Their successful execution and terminal outputs are copied and pasted into seper
 - MH4518_Group8/final_dataset/synthetic_option/heston_output_ref.txt
 
 
+### 2. Models Python Reference and Respective Papers
+Models Python Reference:
+- MH4518_Group8/models
+
+Repective Papers:
+- MH4518_Group8/papers
+
+
+### 3. Jupyter Files
+Run the below jupyter files for output graphs e.g. variance reduction and backtest graph
+
+```bash
+
+MH4518_Group8/pipeline/any_model/cev_last.ipynb
+MH4518_Group8/pipeline/any_model/cev.ipynb
+pMH4518_Group8/ipeline/any_model/gbm.ipynb
+MH4518_Group8/pipeline/any_model/heston.ipynb
+
+```
+
+### 4. Risk Assessment
+Finally, you can run the below risk assessment script to understand how we obtained our risk assessment numbers and figures (for a more quantitative view)
+
+```bash
+
+python risk_assessment.py
+
+```
+
 Thank you !
+
