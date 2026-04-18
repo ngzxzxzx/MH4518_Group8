@@ -45,7 +45,7 @@ Run the below jupyter files for output graphs e.g. variance reduction and backte
 
 MH4518_Group8/pipeline/any_model/cev_last.ipynb
 MH4518_Group8/pipeline/any_model/cev.ipynb
-MH4518_Group8/ipeline/any_model/gbm.ipynb
+MH4518_Group8/pipeline/any_model/gbm.ipynb
 MH4518_Group8/pipeline/any_model/heston.ipynb
 
 ```
