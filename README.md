@@ -30,11 +30,11 @@ Their successful execution and terminal outputs are copied and pasted into seper
 - MH4518_Group8/final_dataset/synthetic_option/heston_output_ref.txt
 
 
-### 2. Models Python Reference and Respective Papers
+### 2. Models Reference (In Python) and Respective Research Papers
 Models Python Reference:
 - MH4518_Group8/models
 
-Repective Papers:
+Repective Research Papers:
 - MH4518_Group8/papers
 
 
