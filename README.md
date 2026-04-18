@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-### 1. Generate Synthetic Option Chain and Fetching YFinance Historical Datasets
+### 1. Fetch YFinance Historical Datasets and Generating Synthetic Option Chain
 Before running the main application, you must navigate to the `create_dataset` directory and run the data generation scripts from **within** that folder as __name__ == "__main__".
 
 ```bash
