@@ -9,12 +9,12 @@ Before running the main application, you must navigate to the `create_dataset` d
 # Navigate into the creation directory
 cd create_folder
 
-# Run the following scripts below:
+# In order to run the following scripts below:
 #Script Path 1: `MH4518_Group8/create_dataset/real_world/fetch_historical_v1.py`
 #Script Path 2: `MH4518_Group8/create_dataset/theoretical_synthetic_options/blackScholes_synthetic.py`
 #Script Path 3: `MH4518_Group8/create_dataset/theoretical_synthetic_options/heston_synthetic.py`
 
-# Run the dataset generation scripts (from within their same directory)
+# From within their respective directories, run the 3 data generation scripts below:
 python fetch_historical_v1.py
 python blackScholes_synthetic.py
 python heston_synthetic.py
